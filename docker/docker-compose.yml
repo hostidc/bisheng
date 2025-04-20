@@ -183,3 +183,23 @@ services:
     depends_on:
       - etcd
       - minio
+
+  ollama:
+    container_name: bisheng-ollama
+    image: ghcr.io/jmorganca/ollama:latest
+    ports:
+      - "11434:11434" # Ollama 默认端口
+    environment:
+      TZ: Asia/Shanghai
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/data/ollama:/root/.ollama # 持久化数据存储
+    command: >
+      sh -c "
+      ollama pull nomic-embed-text && # 拉取 nomic-embed-text 模型
+      ollama serve" # 启动 Ollama 服务
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
