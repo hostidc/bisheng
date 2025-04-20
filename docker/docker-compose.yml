@@ -186,7 +186,7 @@ services:
 
   ollama:
     container_name: bisheng-ollama
-    image: ghcr.io/jmorganca/ollama:latest
+    image: ollama/ollama:latest
     ports:
       - "11434:11434" # Ollama 默认端口
     environment:
